@@ -1,0 +1,50 @@
+export type Category = 'Saree' | 'Other';
+
+export type ProductType = 'Kids Wear' | 'Women Wear' | 'Gents Wear';
+
+export type ClothingSize = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
+
+export const PRODUCT_TYPES: ProductType[] = ['Kids Wear', 'Women Wear', 'Gents Wear'];
+
+export const SIZE_OPTIONS: Record<ProductType, ClothingSize[]> = {
+  'Kids Wear': ['S', 'M', 'L', 'XL', 'XXL'],
+  'Women Wear': ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+  'Gents Wear': ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+};
+
+export type SizeQuantity = {
+  size: ClothingSize;
+  quantity: number;
+  sellingPrice: string;
+};
+
+export type BarcodeItem = {
+  id: string;
+  barcodeId: string;
+  sequenceNumber: number;
+  svg: string;
+  size: ClothingSize | null;
+  sellingPrice: number;
+};
+
+export type ProductEntry = {
+  id: string;
+  category: Category;
+  productName: string;
+  productType: ProductType | null;
+  purchasePrice: number;
+  sellingPrice: number;
+  quantity: number;
+  createdAt: number;
+  startingSequence: number;
+  items: BarcodeItem[];
+};
+
+export type ProductForm = {
+  category: Category;
+  productName: string;
+  productType: ProductType | null;
+  purchasePrice: string;
+  sellingPrice: string;
+  sizeQuantities: SizeQuantity[];
+};
