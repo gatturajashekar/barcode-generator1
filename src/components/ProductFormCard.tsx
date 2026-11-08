@@ -13,11 +13,13 @@ import {
 import {
   PRODUCT_TYPES,
   SIZE_OPTIONS,
+  OFFER_OPTIONS,
   type Category,
   type ClothingSize,
   type ProductForm,
   type ProductType,
   type SizeQuantity,
+  type OfferType,
 } from '../types';
 
 type ProductFormCardProps = {
@@ -42,6 +44,7 @@ function initialForm(): ProductForm {
     productType: 'Kids Wear',
     purchasePrice: '',
     sellingPrice: '',
+    offer: 'No Offer',
     sizeQuantities: SIZE_OPTIONS['Kids Wear'].map((size) => ({
       size,
       quantity: 0,
@@ -431,6 +434,39 @@ function validate(): boolean {
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-base text-slate-800 focus:border-maroon-400 focus:outline-none focus:ring-2 focus:ring-maroon-100 sm:text-sm"
           />
         </div>
+        {/* Offer Selection */}
+<div>
+  <label
+    htmlFor="productOffer"
+    className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-600"
+  >
+    Product Offer
+  </label>
+
+  <div className="relative">
+    <select
+      id="productOffer"
+      value={form.offer}
+      onChange={(e) => update('offer', e.target.value as OfferType)}
+      className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3.5 pr-10 text-base text-slate-800 transition-colors focus:border-maroon-400 focus:outline-none focus:ring-2 focus:ring-maroon-100 sm:text-sm"
+    >
+      {OFFER_OPTIONS.map((offer) => (
+        <option key={offer} value={offer}>
+          {offer === 'No Offer'
+            ? 'No Offer'
+            : offer === '1+1'
+              ? '1+1 — Buy 1 Get 1 Free'
+              : '2+1 — Buy 2 Get 1 Free'}
+        </option>
+      ))}
+    </select>
+
+    <ChevronDown
+      size={16}
+      className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+    />
+  </div>
+</div>
         {/* Prices */}
         <div className={`grid grid-cols-1 gap-4 ${isSaree ? 'sm:grid-cols-2' : ''}`}>
           <Field

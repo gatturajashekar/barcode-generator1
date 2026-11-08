@@ -75,6 +75,7 @@ const requestBody = {
   distributorName: form.distributorName.trim(), // NEW
 
   productType: form.category === 'Other' ? form.productType : null,
+  offer: form.offer,
   purchasePrice: Number(form.purchasePrice),
   sellingPrice: Number(form.sellingPrice),
 
@@ -171,7 +172,7 @@ const requestBody = {
         productName: awsProduct.productName,
 
         productType: awsProduct.productType ?? null,
-
+        offer: form.offer,
         purchasePrice: Number(awsProduct.purchasePrice),
 
         sellingPrice:
