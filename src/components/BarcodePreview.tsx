@@ -69,7 +69,7 @@ export default function BarcodePreview({
         </button>
 
         <button
-          onClick={() => downloadPrintable(product, product.items)}
+          onClick={() => downloadPrintable(product, items)}
           className="group flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3.5 text-sm font-semibold text-black transition-all duration-200 hover:bg-slate-100 active:scale-[0.98] sm:px-6"
         >
           <Download size={18} className="transition-transform group-hover:translate-y-0.5" />
@@ -81,7 +81,7 @@ export default function BarcodePreview({
 }
 
 /* ---------------------------------------------------------
-   50mm × 30mm LABEL PREVIEW
+   50mm × 30mm MINIMAL LABEL
 --------------------------------------------------------- */
 
 function LabelCard({
@@ -103,54 +103,35 @@ function LabelCard({
         boxSizing: 'border-box',
       }}
     >
-      {/* Shop name */}
-      <div className="flex h-[4.5mm] shrink-0 items-center justify-between border-b border-black bg-white px-[1.5mm]">
-        <span className="truncate text-[7px] font-bold tracking-tight text-black">
-          Bhagya Lakshmi Textiles
-        </span>
-
-        <span className="ml-1 shrink-0 text-[6px] font-bold uppercase text-black">
-          {product.category}
-        </span>
-      </div>
-
-      {/* Product details */}
-      <div className="flex min-h-0 flex-1 flex-col justify-between px-[1.5mm] py-[0.5mm]">
+      {/* Product name and size */}
+      <div className="flex min-h-0 flex-1 flex-col justify-between px-[2mm] py-[1mm]">
         <div className="flex items-center justify-between gap-1">
-          <p className="truncate text-[8px] font-bold leading-tight text-black">
+          <p className="min-w-0 truncate text-[11px] font-extrabold leading-tight text-black">
             {product.productName}
           </p>
 
           {showSize && (
-            <span className="flex shrink-0 items-center gap-0.5 text-[7px] font-bold text-black">
-              <Shirt size={8} />
+            <span className="shrink-0 rounded-sm border border-black px-[1mm] text-[10px] font-extrabold leading-tight text-black">
               {item.size}
             </span>
           )}
         </div>
 
-        {/* Price */}
-        <div className="flex items-center justify-between">
-          <span className="text-[6px] font-medium uppercase tracking-wide text-black">
-            Price
-          </span>
-
-          <p className="flex items-center text-[10px] font-bold leading-none text-black">
-            <IndianRupee size={9} className="mr-0.5 shrink-0" />
-            {formatINR(item.sellingPrice ?? product.sellingPrice)}
-          </p>
-        </div>
+        {/* Large selling price */}
+        <p className="text-center text-[15px] font-extrabold leading-none text-black">
+          ₹{formatINR(item.sellingPrice ?? product.sellingPrice)}
+        </p>
 
         {/* Barcode */}
         <div
-          className="flex h-[12mm] w-full items-center justify-center overflow-hidden bg-white"
+          className="flex h-[10mm] w-full items-center justify-center overflow-hidden bg-white"
           style={{ backgroundColor: '#ffffff' }}
         >
           <div
             className="barcode-svg block h-full w-full"
             style={{
               width: '100%',
-              height: '12mm',
+              height: '10mm',
               backgroundColor: '#ffffff',
               overflow: 'hidden',
             }}
@@ -158,8 +139,8 @@ function LabelCard({
           />
         </div>
 
-        {/* Human-readable barcode ID */}
-        <p className="text-center font-mono text-[7px] font-bold leading-none tracking-[0.5px] text-black">
+        {/* Barcode ID */}
+        <p className="text-center font-mono text-[8px] font-bold leading-none tracking-[0.4px] text-black">
           {item.barcodeId}
         </p>
       </div>
@@ -213,21 +194,13 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
 
       return `
         <div class="label">
-          <div class="brand">
-            <span>Bhagya Lakshmi Textiles</span>
-            <span class="cat">${escapeHtml(product.category)}</span>
-          </div>
-
           <div class="body">
             <div class="product-row">
               <p class="name">${escapeHtml(product.productName)}</p>
               ${sizeTag}
             </div>
 
-            <div class="meta">
-              <span class="lbl">PRICE</span>
-              <span class="price">₹${price}</span>
-            </div>
+            <div class="price">₹${price}</div>
 
             <div class="bars">${item.svg}</div>
 
@@ -247,8 +220,8 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
 
   <style>
     @page {
-      size: A4;
-      margin: 10mm;
+      size: 50mm 30mm;
+      margin: 0;
     }
 
     * {
@@ -267,14 +240,12 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
     }
 
     .grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2mm;
-      justify-content: flex-start;
-      align-items: flex-start;
+      display: block;
+      width: 50mm;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Exact physical label dimensions */
     .label {
       width: 50mm;
       height: 30mm;
@@ -283,43 +254,28 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
       overflow: hidden;
       background: #ffffff;
       color: #000000;
-      page-break-inside: avoid;
-      break-inside: avoid;
       margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
-    /* Shop header */
-    .brand {
-      height: 4.5mm;
-      min-height: 4.5mm;
-      background: #ffffff;
-      color: #000000;
-      padding: 0 1.5mm;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 7px;
-      font-weight: bold;
-      line-height: 1;
-      border-bottom: 0.2mm solid #000000;
+    .label:not(:last-child) {
+      page-break-after: always;
+      break-after: page;
     }
 
-    .brand .cat {
-      background: #ffffff;
-      color: #000000;
-      padding: 0;
-      font-size: 6px;
-      font-weight: bold;
-      text-transform: uppercase;
+    .label:last-child {
+      page-break-after: auto;
+      break-after: auto;
     }
 
-    /* Label content */
+    /* Minimal, larger-print label details */
     .body {
-      padding: 0.5mm 1.5mm;
+      padding: 1mm 2mm;
       flex: 1;
       min-height: 0;
       display: flex;
@@ -335,8 +291,8 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
     }
 
     .name {
-      font-size: 8px;
-      font-weight: bold;
+      font-size: 11px;
+      font-weight: 800;
       color: #000000;
       margin: 0;
       line-height: 1.1;
@@ -346,41 +302,28 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
     }
 
     .size {
-      font-size: 7px;
-      font-weight: bold;
+      font-size: 10px;
+      font-weight: 800;
       color: #000000;
+      border: 0.2mm solid #000000;
+      padding: 0 1mm;
       white-space: nowrap;
-    }
-
-    .meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1mm;
-    }
-
-    .lbl {
-      font-size: 6px;
-      color: #000000;
-      font-weight: bold;
-      text-transform: uppercase;
-      line-height: 1;
     }
 
     .price {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 10px;
+      font-size: 15px;
       color: #000000;
-      font-weight: bold;
+      font-weight: 800;
       line-height: 1;
+      text-align: center;
     }
 
-    /* Barcode area: black bars on white background */
     .bars {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 12mm;
+      height: 10mm;
       overflow: hidden;
       background: #ffffff;
     }
@@ -401,13 +344,12 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
       fill: #000000 !important;
     }
 
-    /* Human-readable barcode ID */
     .code-str {
       font-family: monospace;
-      font-size: 7px;
+      font-size: 8px;
       font-weight: bold;
       text-align: center;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       color: #000000;
       margin: 0;
       line-height: 1;
@@ -416,6 +358,16 @@ function downloadPrintable(product: ProductEntry, items: BarcodeItem[]) {
     @media screen {
       body {
         padding: 10mm;
+      }
+    }
+
+    @media print {
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 50mm;
+        height: auto;
       }
     }
   </style>

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,18 +9,21 @@
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
   }
+
   body {
     @apply font-sans text-slate-800 bg-slate-50;
     overflow-x: hidden;
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
   }
+
   /* Prevent iOS auto-zoom on focus by keeping inputs at 16px+ */
   input,
   select,
   textarea {
     font-size: 16px;
   }
+
   @media (min-width: 640px) {
     input,
     select,
@@ -27,6 +31,7 @@
       font-size: 0.875rem;
     }
   }
+
   /* Respect mobile safe areas */
   @supports (padding: env(safe-area-inset-bottom)) {
     body {
@@ -39,20 +44,29 @@
   .text-balance {
     text-wrap: balance;
   }
+
   .bg-grid {
-    background-image: radial-gradient(circle, rgba(128, 0, 32, 0.06) 1px, transparent 1px);
+    background-image: radial-gradient(
+      circle,
+      rgba(128, 0, 32, 0.06) 1px,
+      transparent 1px
+    );
     background-size: 22px 22px;
   }
+
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
+
   .scrollbar-thin::-webkit-scrollbar-thumb {
     @apply bg-maroon-200 rounded-full;
   }
+
   .scrollbar-thin::-webkit-scrollbar-track {
     @apply bg-transparent;
   }
+
   /* Barcode SVG must never distort — preserve aspect ratio */
   .barcode-svg svg {
     display: block;
@@ -62,33 +76,94 @@
   }
 }
 
+/* PRINT ONLY — normal website UI remains unchanged */
 @media print {
-  body * {
-    visibility: hidden;
+  html,
+  body {
+    width: 50mm !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    overflow: visible !important;
   }
+
+  body * {
+    visibility: hidden !important;
+  }
+
   .print-area,
   .print-area * {
-    visibility: visible;
+    visibility: visible !important;
   }
+
   .print-area {
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    padding: 0;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 50mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
   }
+
+  /* Remove preview layout spacing only during printing */
+  .print-area > div {
+    display: block !important;
+    width: 50mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
   .no-print {
     display: none !important;
   }
-  /* Physical label dimensions: 50mm × 30mm — responsive styles must not change this */
+
+  /* Individual barcode label */
   .print-label {
-    width: 50mm;
-    height: 30mm;
-    overflow: hidden;
-    page-break-inside: avoid;
-    break-inside: avoid;
+    display: flex !important;
+    flex-direction: column !important;
+
+    width: 50mm !important;
+    height: 30mm !important;
+    min-width: 50mm !important;
+    max-width: 50mm !important;
+
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0.5mm !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+
+    page-break-after: always !important;
+    break-after: page !important;
   }
+
+  .print-label:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  /* Barcode SVG print dimensions */
+  .barcode-svg {
+    display: block !important;
+    width: 100% !important;
+    height: 12mm !important;
+    overflow: hidden !important;
+  }
+
+  .barcode-svg svg {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
   @page {
-    size: A4;
-    margin: 10mm;
+    size: 50mm 30mm;
+    margin: 0;
   }
 }
